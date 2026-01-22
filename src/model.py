@@ -17,22 +17,39 @@ class NeuralNetwork:
 
     def __init__(self, input_size=784, hidden_size=128, output_size=10):
         # Definicion de tamaño de matriz entre matriz de entrada con matriz oculta.
-        self.w1 = np.random.randn( hidden_size, input_size) * np.sqrt(2.0 / input_size)
+        self.W1 = np.random.randn( hidden_size, input_size) * np.sqrt(2.0 / input_size)
         self.b1 = np.zeros((hidden_size, 1))
 
         # Definicion de tamaño de matriz entre matriz oculta con matriz de entrada.
-        self.w2 = np.random.randn(output_size, hidden_size) * np.sqrt(2.0 / hidden_size)
+        self.W2 = np.random.randn(output_size, hidden_size) * np.sqrt(2.0 / hidden_size)
         self.b2 = np.zeros((output_size, 1))
 
     def show_parameters_info(self):
         """Muestra estadísticas clave de los pesos y sesgos."""
-        params = [('w1', self.w1), ('b1', self.b1), 
-                  ('w2', self.w2), ('b2', self.b2)]
+        params = [('W1', self.W1), ('b1', self.b1), 
+                  ('W2', self.W2), ('b2', self.b2)]
          
         print("\n--- Diagnóstico de Parámetros ---")
         for name, p in params:
             print(f"{name:2} | Shape: {str(p.shape):10} | Media: {np.mean(p):.4f} | Desv. Est: {np.std(p):.4f}")
 
-        print(f"\nPrimeros 5 valores de la primera fila de W1:\n{self.w1[0, :5]}")
+        print(f"\nPrimeros 5 valores de la primera fila de W1:\n{self.W1[0, :5]}")
 
-    
+    def forward(self, X):
+        """
+        X: matriz de entrada (784, m) donde m es el número de ejemplos.
+        Retorna la predicción final (A2).
+        """
+        # --- CAPA 1 (Oculta) ---
+        # Combinación lineal: Z1 = W1 * X + b1
+        self.Z1 = np.dot(self.W1, X) + self.b1
+        # Activación: A1 = ReLU(Z1)
+        self.A1 = relu(self.Z1)
+        
+        # --- CAPA 2 (Salida) ---
+        # Combinación lineal: Z2 = W2 * A1 + b2
+        self.Z2 = np.dot(self.W2, self.A1) + self.b2
+        # Activación: A2 = Softmax(Z2)
+        self.A2 = softmax(self.Z2)
+        
+        return self.A2
