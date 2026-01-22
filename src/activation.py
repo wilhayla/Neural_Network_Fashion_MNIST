@@ -27,3 +27,17 @@ def softmax(Z):
     # (evita que np.exp explote con números grandes)
     exp_Z = np.exp(Z - np.max(Z, axis=0, keepdims=True))
     return exp_Z / np.sum(exp_Z, axis=0, keepdims=True)
+
+def categorical_cross_entropy(y_true, y_pred):
+    """
+    y_true: Etiquetas reales en formato One-Hot (10, m)
+    y_pred: Predicciones de la red tras Softmax (10, m)
+    """
+    m = y_true.shape[1]
+    # Usamos un pequeño epsilon (1e-15) para evitar el logaritmo de cero,
+    # lo cual daría un error matemático.
+    epsilon = 1e-15
+    y_pred = np.clip(y_pred, epsilon, 1 - epsilon)
+    
+    loss = -np.sum(y_true * np.log(y_pred)) / m
+    return loss
