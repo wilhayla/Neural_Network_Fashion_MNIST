@@ -26,9 +26,8 @@ class NeuralNetwork:
 
     def show_parameters_info(self):
         """Muestra estadísticas clave de los pesos y sesgos."""
-        params = [('W1', self.W1), ('b1', self.b1), 
-                  ('W2', self.W2), ('b2', self.b2)]
-         
+        params = [('W1', self.W1), ('b1', self.b1), ('W2', self.W2), ('b2', self.b2)]
+
         print("\n--- Diagnóstico de Parámetros ---")
         for name, p in params:
             print(f"{name:2} | Shape: {str(p.shape):10} | Media: {np.mean(p):.4f} | Desv. Est: {np.std(p):.4f}")
