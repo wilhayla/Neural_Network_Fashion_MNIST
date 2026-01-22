@@ -54,4 +54,7 @@ if __name__ == "__main__":
     PATH_DATA = 'data'
     X, Y = verify_data_loading('data')
 
+    nn = NeuralNetwork()
+    nn.show_parameters_info()
+
     
