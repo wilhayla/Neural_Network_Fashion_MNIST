@@ -3,6 +3,7 @@ It imports functions from the other files and contains the main loop.
 '''
 import numpy as np
 from src.data_loader import load_mnist, preprocess_data
+from src.model import NeuralNetwork
 
 
 def verify_data_loading(path):
@@ -48,8 +49,9 @@ def verify_data_loading(path):
 
     return None, None
 
-
 # --- Ejecución ---
 if __name__ == "__main__":
     PATH_DATA = 'data'
     X, Y = verify_data_loading('data')
+
+    
