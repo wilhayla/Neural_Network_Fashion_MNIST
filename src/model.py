@@ -5,6 +5,7 @@
 - update_parameters(parameters, gradients, learning_rate)
 '''
 import numpy as np
+from src.activation import relu, softmax
 
 
 class NeuralNetwork:
@@ -33,3 +34,5 @@ class NeuralNetwork:
             print(f"{name:2} | Shape: {str(p.shape):10} | Media: {np.mean(p):.4f} | Desv. Est: {np.std(p):.4f}")
 
         print(f"\nPrimeros 5 valores de la primera fila de W1:\n{self.w1[0, :5]}")
+
+    
