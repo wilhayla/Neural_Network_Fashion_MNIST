@@ -69,3 +69,12 @@ class NeuralNetwork:
         db1 = (1 / m) * np.sum(dZ1, axis=1, keepdims=True)
         
         return dW1, db1, dW2, db2
+    
+    def update_parameters(self, dW1, db1, dW2, db2, learning_rate):
+        """
+        Aplica las correcciones a los pesos y sesgos.
+        """
+        self.W1 = self.W1 - learning_rate * dW1
+        self.b1 = self.b1 - learning_rate * db1
+        self.W2 = self.W2 - learning_rate * dW2
+        self.b2 = self.b2 - learning_rate * db2
