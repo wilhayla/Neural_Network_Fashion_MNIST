@@ -92,7 +92,7 @@ def train():
     
     # --- 2. Inicialización del Modelo ---
     # Usamos 128 neuronas ocultas como planeamos
-    nn = NeuralNetwork(input_size=784, hidden_size=128, output_size=10)
+    nn = NeuralNetwork()
     
     # --- 3. Parámetros de Entrenamiento ---
     epochs = 100
