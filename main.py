@@ -49,12 +49,38 @@ def verify_data_loading(path):
 
     return None, None
 
+def run_test():
+    # --- PASO 1: Cargar los parámetros (Datos y Etiquetas) ---
+    # Asegúrate de que la carpeta 'data' contenga los archivos .ubyte
+    print("Cargando datos...")
+    raw_images, raw_labels = load_mnist('data', kind='train')
+    
+    # Preprocesamos: normalizamos píxeles y hacemos One-Hot a las etiquetas
+    X, Y = preprocess_data(raw_images, raw_labels)
+    
+    # --- PASO 2: Preparar la entrada para la Red ---
+    # Importante: Transponemos X para que sea (784, 60000)
+    X_input = X.T 
+    Y_input = Y.T # También transponemos las etiquetas para el futuro
+    
+    # --- PASO 3: Instanciar la Red ---
+    # 784 entradas, 128 neuronas ocultas, 10 clases de salida
+    nn = NeuralNetwork()
+    
+    # --- PASO 4: Probar el Forward Pass ---
+    print("Ejecutando Forward Pass...")
+    predicciones = nn.forward(X_input)
+    
+    # --- PASO 5: Verificaciones ---
+    print(f"\nForma de X tras transponer: {X_input.shape}") # (784, 60000)
+    print(f"Forma de las predicciones: {predicciones.shape}") # (10, 60000)
+    
+    # Verificamos si Softmax funcionó: la suma de la primera columna debe ser 1
+    suma_ejemplo = np.sum(predicciones[:, 0])
+    print(f"Suma de prob. del primer ejemplo: {suma_ejemplo:.2f}")
+
 # --- Ejecución ---
 if __name__ == "__main__":
-    PATH_DATA = 'data'
-    X, Y = verify_data_loading('data')
-
-    nn = NeuralNetwork()
-    nn.show_parameters_info()
+    run_test()
 
     
