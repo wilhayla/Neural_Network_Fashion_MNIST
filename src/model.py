@@ -52,3 +52,20 @@ class NeuralNetwork:
         self.A2 = softmax(self.Z2)
         
         return self.A2
+    
+    def backward(self, X, Y):
+        m = X.shape[1] # Número de ejemplos
+        
+        # --- Cálculo de Gradientes para la Capa de Salida ---
+        dZ2 = self.A2 - Y
+        dW2 = (1 / m) * np.dot(dZ2, self.A1.T)
+        db2 = (1 / m) * np.sum(dZ2, axis=1, keepdims=True)
+        
+        # --- Cálculo de Gradientes para la Capa Oculta ---
+        # Usamos la derivada de ReLU que programamos antes
+        from src.activation import relu_derivative
+        dZ1 = np.dot(self.W2.T, dZ2) * relu_derivative(self.Z1)
+        dW1 = (1 / m) * np.dot(dZ1, X.T)
+        db1 = (1 / m) * np.sum(dZ1, axis=1, keepdims=True)
+        
+        return dW1, db1, dW2, db2
