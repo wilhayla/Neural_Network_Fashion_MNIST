@@ -6,6 +6,19 @@ from src.data_loader import load_mnist, preprocess_data
 from src.model import NeuralNetwork
 from src.activation import categorical_cross_entropy
 
+# --- 1. DEFINICIÓN DEL DICCIONARIO (Global) ---
+label_names = {
+    0: "Camiseta/Top",
+    1: "Pantalón",
+    2: "Pulóver",
+    3: "Vestido",
+    4: "Abrigo",
+    5: "Sandalia",
+    6: "Camisa",
+    7: "Zapatilla",
+    8: "Bolso",
+    9: "Bota de tobillo"
+}
 
 def verify_data_loading(path):
     '''
