@@ -95,36 +95,85 @@ def train():
     nn = NeuralNetwork()
     
     # --- 3. Parámetros de Entrenamiento ---
-    epochs = 100
-    learning_rate = 0.1
+    epochs = 60 # Con mini-batches, 50 épocas suelen ser suficientes
+    learning_rate = 0.05
+    batch_size = 64 # probar con trozos de 64 imagenes
     
-    print(f"\nIniciando entrenamiento ({epochs} épocas)...")
-    print("-" * 30)
+    print(f"Entrenando con Mini-batches de {batch_size} ejemplos...")
     
-    for i in range(epochs):
-        # 1. Forward Pass
-        A2 = nn.forward(X_input)
+    for epoch in range(epochs):
+        # Creamos los batches desordenados para esta época
+        batches = create_batches(X_input, Y_input, batch_size)
         
-        # 2. Calcular el error (Loss)
-        cost = categorical_cross_entropy(Y_input, A2)
-        
-        # 3. Backpropagation
-        dW1, db1, dW2, db2 = nn.backward(X_input, Y_input)
-        
-        # 4. Actualización de parámetros
-        nn.update_parameters(dW1, db1, dW2, db2, learning_rate)
-        
-        # 5. Monitoreo cada 10 épocas
-        if i % 10 == 0:
-            accuracy = get_accuracy(A2, Y_input)
-            print(f"Epoch {i:3} | Costo: {cost:.4f} | Precisión: {accuracy:.2%}")
+        for X_batch, Y_batch in batches:
+            # A. Forward Pass
+            nn.forward(X_batch)
+            
+            # B. Backpropagation (Gradientes)
+            dW1, db1, dW2, db2 = nn.backward(X_batch, Y_batch)
+            
+            # C. Actualización de Pesos
+            nn.update_parameters(dW1, db1, dW2, db2, learning_rate)
+            
+        # Monitoreo de progreso cada 5 épocas
+        if epoch % 5 == 0:
+            full_pred = nn.forward(X_input)
+            loss = categorical_cross_entropy(Y_input, full_pred)
+            acc = get_accuracy(full_pred, Y_input)
+            print(f"Época {epoch:2} | Costo: {loss:.4f} | Precisión: {acc:.2%}")
 
     print("-" * 30)
     final_acc = get_accuracy(nn.forward(X_input), Y_input)
-    print(f"Entrenamiento finalizado. Precisión final: {final_acc:.2%}")
+    print(f"¡Entrenamiento Terminado! Precisión Final: {final_acc:.2%}")
+    return nn
+
+def final_evaluation(nn):
+    print("\n--- EVALUACIÓN FINAL CON DATOS DE TEST ---")
+    
+    # 1. Cargar datos de test (que la red NUNCA ha visto)
+    test_images, test_labels = load_mnist('data', kind='t10k')
+    X_test, Y_test = preprocess_data(test_images, test_labels)
+    
+    # 2. Preparar entrada (Transponer)
+    X_test_input = X_test.T
+    Y_test_input = Y_test.T
+    
+    # 3. Realizar predicción
+    test_predictions = nn.forward(X_test_input)
+    
+    # 4. Calcular métricas
+    test_loss = categorical_cross_entropy(Y_test_input, test_predictions)
+    test_acc = get_accuracy(test_predictions, Y_test_input)
+    
+    print(f"Costo en Test: {test_loss:.4f}")
+    print(f"Precisión en Test: {test_acc:.2%}")
+    
+    if test_acc >= 0.95:
+        print("¡INCREÍBLE! Has superado el reto con creces. 🚀")
+    elif test_acc >= 0.85:
+        print("¡Excelente trabajo! Has superado el mínimo requerido. ✅")
 
 # --- Ejecución ---
 if __name__ == "__main__":
-    train()
+    # 1. Ejecutar el entrenamiento y obtener el objeto nn entrenado
+    # La función train ahora debe devolver el objeto nn
+
+    # nn_entrenada = train()
+
+    # nn_entrenada.save_model("modelo_fashion_94.npz")
+    
+    # 2. Llamar a la función de evaluación pasándole ese objeto
+    # final_evaluation(nn_entrenada)
+
+    '''una ves guardado el modelo cargarlo de este forma'''
+
+    '''Creamos una red "vacía"'''
+    # nn = NeuralNetwork()
+    
+    ''' Cargamos el conocimiento guardado (tarda menos de 1 segundo)'''
+    # nn.load_model("modelo_fashion_94.npz")
+    
+    ''' ¡Listo! Ya puedes evaluar o predecir sin entrenar de nuevo'''
+    # final_evaluation(nn)
 
     
