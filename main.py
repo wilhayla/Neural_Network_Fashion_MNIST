@@ -166,6 +166,31 @@ def final_evaluation(nn):
     elif test_acc >= 0.85:
         print("¡Excelente trabajo! Has superado el mínimo requerido. ✅")
 
+def predict_random_image(nn):
+    '''
+    Funcion que elegira una imagen al azar del set de etiquetas, se le pasara a la red y dira que es
+    '''
+    # 1. Cargamos datos de test
+    test_images, test_labels = load_mnist('data', kind='t10k')
+    
+    # 2. Elegimos un índice al azar
+    idx = np.random.randint(0, test_images.shape[0])
+    img = test_images[idx].reshape(1, 784) / 255.0 # Normalizamos
+    
+    # 3. La red hace su magia (predicción)
+    prediction = nn.forward(img.T)
+    predicted_class = np.argmax(prediction)
+    actual_class = test_labels[idx]
+    
+    print("\n--- PREDICCIÓN INDIVIDUAL ---")
+    print(f"La IA dice: {label_names[predicted_class]}")
+    print(f"Realidad:   {label_names[actual_class]}")
+    
+    if predicted_class == actual_class:
+        print("¡Resultado Correcto! ✅")
+    else:
+        print("La IA se confundió esta vez. ❌")
+
 # --- Ejecución ---
 if __name__ == "__main__":
     # 1. Ejecutar el entrenamiento y obtener el objeto nn entrenado
