@@ -206,12 +206,20 @@ if __name__ == "__main__":
     '''una ves guardado el modelo cargarlo de este forma'''
 
     '''Creamos una red "vacía"'''
-    # nn = NeuralNetwork()
+    nn = NeuralNetwork()
     
     ''' Cargamos el conocimiento guardado (tarda menos de 1 segundo)'''
-    # nn.load_model("modelo_fashion_94.npz")
+    try:
+
+        nn.load_model("modelo_fashion_94.npz")
+    except FileNotFoundError:
+        nn = train()
+        nn.save_model("modelo_fashion_94.npz")
     
     ''' ¡Listo! Ya puedes evaluar o predecir sin entrenar de nuevo'''
-    # final_evaluation(nn)
+    final_evaluation(nn)
+
+    # Demostracion visual 
+    predict_random_image(nn)
 
     
