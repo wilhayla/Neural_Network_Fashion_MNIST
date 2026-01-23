@@ -78,3 +78,17 @@ class NeuralNetwork:
         self.b1 = self.b1 - learning_rate * db1
         self.W2 = self.W2 - learning_rate * dW2
         self.b2 = self.b2 - learning_rate * db2
+
+    def save_model(self, filename="model_weights.npz"):
+        """Guarda los parámetros en un archivo comprimido de NumPy."""
+        np.savez(filename, W1=self.W1, b1=self.b1, W2=self.W2, b2=self.b2)
+        print(f"Modelo guardado en {filename}")
+
+    def load_model(self, filename="model_weights.npz"):
+        """Carga los parámetros desde un archivo."""
+        data = np.load(filename)
+        self.W1 = data['W1']
+        self.b1 = data['b1']
+        self.W2 = data['W2']
+        self.b2 = data['b2']
+        print(f"Modelo cargado desde {filename}")
