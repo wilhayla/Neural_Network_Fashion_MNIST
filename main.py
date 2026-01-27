@@ -33,16 +33,12 @@ def verify_data_loading(path):
         x_train, y_train = preprocess_data(images, labels)
 
         # Check de Dimensiones
-        assert x_train.shape == (
-            60000, 784), f"Error en shape de imágenes: {x_train.shape}"
-        assert y_train.shape == (
-            60000, 10), f"Error en shape de etiquetas: {y_train.shape}"
+        assert x_train.shape == (60000, 784), f"Error en shape de imágenes: {x_train.shape}"
+        assert y_train.shape == (60000, 10), f"Error en shape de etiquetas: {y_train.shape}"
 
         # Check de Rango (Normalización)
-        assert np.max(
-            x_train) <= 1.0, "Los datos no están normalizados (máx > 1)"
-        assert np.min(
-            x_train) >= 0.0, "Los datos tienen valores negativos inesperados"
+        assert np.max(x_train) <= 1.0, "Los datos no están normalizados (máx > 1)"
+        assert np.min(x_train) >= 0.0, "Los datos tienen valores negativos inesperados"
 
         # 3. Pruebas de verificación
         # Debería ser (60000, 784)
