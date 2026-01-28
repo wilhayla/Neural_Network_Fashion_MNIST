@@ -63,25 +63,35 @@ class NeuralNetwork:
         m = X.shape[1]
         
         # --- Cálculo de Gradientes para la Capa de Salida ---
-        dZ2 = self.A2 - Y  # Calculo de la direccion y magnitud de error entre la prediccion A2 y el valor de Y que es 1
-        dW2 = (1 / m) * np.dot(dZ2, self.A1.T)
-        db2 = (1 / m) * np.sum(dZ2, axis=1, keepdims=True)
+        # Regla de la cadena.
+        dZ2 = self.A2 - Y  # Representa la derivada del error respecto a la salida de la ultima capa (Z2). Este es el mensaje de error que se enviara para atras.
+        dW2 = (1 / m) * np.dot(dZ2, self.A1.T) # Aqui la regla de la cadena conecta el error con la capa anterior, o sea con la activacion A1 de las neuronas de la capa oculta.
+        db2 = (1 / m) * np.sum(dZ2, axis=1, keepdims=True) # Aqui transladamos el error en relacion al sesgo(bias) b2
         
         # --- Cálculo de Gradientes para la Capa Oculta ---
         # Usamos la derivada de ReLU que programamos antes
 
         from src.activation import relu_derivative
-
+        # Error propagado hasta la capa oculta. Se reparte entre las neuronas ocultas usando los pesos que las conectan W2
         dZ1 = np.dot(self.W2.T, dZ2) * relu_derivative(self.Z1)
-        dW1 = (1 / m) * np.dot(dZ1, X.T)
+        # Error propagado en relacion con la suma de la capa oculta dZ1 y las entradas originales X
+        dW1 = (1 / m) * np.dot(dZ1, X.T) # dZ1 tiene forma (128, m), X tiene forma (784, m), X.T realiza la transpuesta de X (m, 784). Al multiplicar (128,m) . (m,784) el resultado es una matriz de (128, 784)
+        # Aqui transladmos el error con relacion al sesgo b1
         db1 = (1 / m) * np.sum(dZ1, axis=1, keepdims=True)
         
         return dW1, db1, dW2, db2
     
     def update_parameters(self, dW1, db1, dW2, db2, learning_rate):
         """
-        Aplica las correcciones a los pesos y sesgos.
+        Esta funcion ejecuta el algoritmo de Descenso de Gradiente.
+        Las gradientes calculadas, como por ejemplo la gradiente de dW1, nos indica la direccion en el que el error sube.
+        Como nosotros queremos que el error baje, nos movemos en la direccion opuesta al gradiante. Por eso se realiza la operacion
+        de "resta".
         """
+        # learning_rate es un numero pequeño que controla que tan grande es el paso que damos,
+        # para calcular de nuevo una nueva gradiante.
+
+        # Actualizamos cada una de las gradiantes con learning_rate.
         self.W1 = self.W1 - learning_rate * dW1
         self.b1 = self.b1 - learning_rate * db1
         self.W2 = self.W2 - learning_rate * dW2
