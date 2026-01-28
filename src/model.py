@@ -16,9 +16,14 @@ class NeuralNetwork:
     '''
 
     def __init__(self, input_size=784, hidden_size=128, output_size=10):
-        # Definicion de tamaño de matriz entre matriz de entrada con matriz oculta.
+        # Definicion del peso de cada neurona de entrada con las neuronas ocultas
+        # Resultado: una matriz W1 de tamaño 128 x 784
+        # Cada neurona de entrada tiene 128 pesos W.
+        # np.sqrt(2.0 / input_size): inicializacion He o (Kaiming Init). Formula que se utiliza para escalar los valores de W1 y evitar que sean muy grandes o muy pequeñas.
+                  # Tambien esta formula esta diseñada para trabajar perfectamente con la funcion ReLU. Ayuda a que la mitad de las neuronas se activen y la otra mitad no, 
+                  # manteniendo el aprendizaje dinamico.
         self.W1 = np.random.randn( hidden_size, input_size) * np.sqrt(2.0 / input_size)
-        self.b1 = np.zeros((hidden_size, 1))
+        self.b1 = np.zeros((hidden_size, 1)) # se inicializa el sesgo(bias) con un vector de ceros, de 128 filas.
 
         # Definicion de tamaño de matriz entre matriz oculta con matriz de entrada.
         self.W2 = np.random.randn(output_size, hidden_size) * np.sqrt(2.0 / hidden_size)
@@ -54,16 +59,19 @@ class NeuralNetwork:
         return self.A2
     
     def backward(self, X, Y):
-        m = X.shape[1] # Número de ejemplos
+        # Obtener la cantidad de imagenes en total
+        m = X.shape[1]
         
         # --- Cálculo de Gradientes para la Capa de Salida ---
-        dZ2 = self.A2 - Y
+        dZ2 = self.A2 - Y  # Calculo de la direccion y magnitud de error entre la prediccion A2 y el valor de Y que es 1
         dW2 = (1 / m) * np.dot(dZ2, self.A1.T)
         db2 = (1 / m) * np.sum(dZ2, axis=1, keepdims=True)
         
         # --- Cálculo de Gradientes para la Capa Oculta ---
         # Usamos la derivada de ReLU que programamos antes
+
         from src.activation import relu_derivative
+
         dZ1 = np.dot(self.W2.T, dZ2) * relu_derivative(self.Z1)
         dW1 = (1 / m) * np.dot(dZ1, X.T)
         db1 = (1 / m) * np.sum(dZ1, axis=1, keepdims=True)
