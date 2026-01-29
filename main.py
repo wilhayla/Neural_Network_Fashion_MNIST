@@ -132,11 +132,11 @@ def train():
             nn.update_parameters(dW1, db1, dW2, db2, learning_rate)
             
         # Monitoreo de progreso cada 5 épocas
-        if epoch % 5 == 0:
-            full_pred = nn.forward(X_input)
-            loss = categorical_cross_entropy(Y_input, full_pred)
-            acc = get_accuracy(full_pred, Y_input)
-            print(f"Época {epoch:2} | Costo: {loss:.4f} | Precisión: {acc:.2%}")
+        if epoch % 5 == 0: # cuando esta condicion se cumple la red hace una pausa en el entrenamiento para reportar como va.
+            full_pred = nn.forward(X_input) # pasa las 60.000 imagenes a la red para ver que opina ahora que ha entrenado un poco mas.
+            loss = categorical_cross_entropy(Y_input, full_pred) # Calcula el error global
+            acc = get_accuracy(full_pred, Y_input) # calcula el porcentaje de aciertos
+            print(f"Época {epoch:2} | Costo: {loss:.4f} | Precisión: {acc:.2%}") # muestra el informa en pantalla
 
     print("-" * 30)
     final_acc = get_accuracy(nn.forward(X_input), Y_input)
@@ -199,12 +199,12 @@ if __name__ == "__main__":
     # 1. Ejecutar el entrenamiento y obtener el objeto nn entrenado
     # La función train ahora debe devolver el objeto nn
 
-    # nn_entrenada = train()
+    nn_entrenada = train()
 
-    # nn_entrenada.save_model("modelo_fashion_94.npz")
+    nn_entrenada.save_model("modelo_fashion_94.npz")
     
     # 2. Llamar a la función de evaluación pasándole ese objeto
-    # final_evaluation(nn_entrenada)
+    final_evaluation(nn_entrenada)
 
     '''una ves guardado el modelo cargarlo de este forma'''
 
