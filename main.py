@@ -61,14 +61,21 @@ def verify_data_loading(path):
 
 def get_accuracy(predictions, labels):
     """
+    Funcion que te dice que porcentaje de las imagenes clasifico correctamente en la red
+
     Compara el índice del valor máximo (la predicción) 
     con el índice del 1 en el One-Hot (la realidad).
     """
-    pred_class = np.argmax(predictions, axis=0)
-    true_class = np.argmax(labels, axis=0)
-    return np.mean(pred_class == true_class)
+    pred_class = np.argmax(predictions, axis=0) # argmax busca la posicion del numero mas grande para las predicciones
+    true_class = np.argmax(labels, axis=0) # argmax busca la posicion del numero mas grande para cada etiqueta.
 
-def create_batches(X, Y, batch_size):
+    return np.mean(pred_class == true_class) # retorna una lista de valores booleanos
+                                             # si la prediccion coincidio con la realidad es True(1)
+                                             # si no coincidio es False (0)
+                                             # mean saca el promedio entre los ceros y unos,
+                                             # si aciertas el 90% de las imagnes, el promedio sera 0,90
+
+def create_batches(X, Y, batch_size): # X (datos de entrada), Y(etiquetas correspondientes)
     """
     Divide los datos en grupos pequeños.
     X: (784, 60000), Y: (10, 60000)
