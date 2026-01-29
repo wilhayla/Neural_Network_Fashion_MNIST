@@ -199,12 +199,12 @@ if __name__ == "__main__":
     # 1. Ejecutar el entrenamiento y obtener el objeto nn entrenado
     # La función train ahora debe devolver el objeto nn
 
-    nn_entrenada = train()
+    # nn_entrenada = train()
 
-    nn_entrenada.save_model("modelo_fashion_94.npz")
+    # nn_entrenada.save_model("modelo_fashion_94.npz")
     
     # 2. Llamar a la función de evaluación pasándole ese objeto
-    final_evaluation(nn_entrenada)
+    # final_evaluation(nn_entrenada)
 
     '''una ves guardado el modelo cargarlo de este forma'''
 
